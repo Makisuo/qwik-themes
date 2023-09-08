@@ -60,7 +60,7 @@ export  default component$(({ Component, pageProps }) => {
 
 ### HTML & CSS
 
-That's it, now your Qwik app fully supports dark mode, including System preference with `prefers-color-scheme`. The theme is also immediately synced between tabs. By default, next-themes modifies the `data-theme` attribute on the `html` element, which you can easily use to style your app:
+That's it, now your Qwik app fully supports dark mode, including System preference with `prefers-color-scheme`. The theme is also immediately synced between tabs. By default, qwik-themes modifies the `data-theme` attribute on the `html` element, which you can easily use to style your app:
 
 ```css
 :root {
@@ -75,7 +75,7 @@ That's it, now your Qwik app fully supports dark mode, including System preferen
 }
 ```
 
-> **Note!** If you set the attribute of your Theme Provider to class for Tailwind next-themes will modify the `class` attribute on the `html` element. See [With Tailwind](###with-tailwind).
+> **Note!** If you set the attribute of your Theme Provider to class for Tailwind qwik-themes will modify the `class` attribute on the `html` element. See [With Tailwind](###with-tailwind).
 
 ### useTheme
 
@@ -164,7 +164,7 @@ TODO
 
 ### Disable transitions on theme change
 
-The creator of next-themes wrote about [this technique here](https://paco.sh/blog/disable-theme-transitions). We can forcefully disable all CSS transitions before the theme is changed, and re-enable them immediately afterwards. This ensures your UI with different transition durations won't feel inconsistent when changing the theme.
+The creator of qwik-themes wrote about [this technique here](https://paco.sh/blog/disable-theme-transitions). We can forcefully disable all CSS transitions before the theme is changed, and re-enable them immediately afterwards. This ensures your UI with different transition durations won't feel inconsistent when changing the theme.
 
 To enable this behavior, pass the `disableTransitionOnChange` prop:
 
@@ -197,7 +197,7 @@ document.documentElement.getAttribute('data-theme')
 
 ### More than light and dark mode
 
-next-themes is designed to support any number of themes! Simply pass a list of themes:
+qwik-themes is designed to support any number of themes! Simply pass a list of themes:
 
 ```js
 <ThemeProvider themes={['pink', 'red', 'blue']}>
