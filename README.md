@@ -41,7 +41,6 @@ import { ThemeProvider } from 'qwik-themes'
 export  default component$(({ Component, pageProps }) => {
   return (
    <QwikCityProvider>
-        <ThemeProvider>
             <head>
                 <meta charSet="utf-8" />
                 <link rel="manifest" href="/manifest.json" />
@@ -49,9 +48,10 @@ export  default component$(({ Component, pageProps }) => {
                 <ServiceWorkerRegister />
             </head>
             <body lang="en">
-                <RouterOutlet />
+                <ThemeProvider>
+                    <RouterOutlet />
+                </ThemeProvider>
             </body>
-        </ThemeProvider>
 	</QwikCityProvider>
   )
 })
@@ -238,12 +238,12 @@ function ThemedImage() {
     <>
       {/* When the theme is dark, hide this div */}
       <div data-hide-on-theme="dark">
-        <Image src="light.png" width={400} height={400} />
+        <img src="light.png" width={400} height={400} />
       </div>
 
       {/* When the theme is light, hide this div */}
       <div data-hide-on-theme="light">
-        <Image src="dark.png" width={400} height={400} />
+        <img src="dark.png" width={400} height={400} />
       </div>
     </>
   )
