@@ -12,7 +12,10 @@
 			"types": "./lib-types/index.d.ts"
 		}
 	},
-	"files": ["lib", "lib-types"],
+	"files": [
+		"lib",
+		"lib-types"
+	],
 	"engines": {
 		"node": ">=15.0.0"
 	},
@@ -33,20 +36,20 @@
 		"qwik": "qwik"
 	},
 	"devDependencies": {
-		"@builder.io/qwik": "1.2.10",
-		"@types/eslint": "8.44.1",
-		"@types/node": "^20.4.5",
-		"@typescript-eslint/eslint-plugin": "6.2.0",
-		"@typescript-eslint/parser": "6.2.0",
-		"eslint": "8.45.0",
+		"@builder.io/qwik": "1.4.0",
+		"@types/eslint": "8.56.2",
+		"@types/node": "^20.11.5",
+		"@typescript-eslint/eslint-plugin": "6.19.1",
+		"@typescript-eslint/parser": "6.19.1",
+		"eslint": "8.56.0",
 		"eslint-plugin-qwik": "latest",
-		"np": "7.6.1",
-		"prettier": "3.0.0",
-		"typescript": "5.1.6",
-		"undici": "5.22.1",
-		"vite": "4.4.7",
-		"vite-tsconfig-paths": "4.2.0",
-		"@biomejs/biome": "^1.1.2"
+		"np": "9.2.0",
+		"prettier": "3.2.4",
+		"typescript": "5.3.3",
+		"undici": "6.4.0",
+		"vite": "5.0.12",
+		"vite-tsconfig-paths": "4.3.1",
+		"@biomejs/biome": "^1.5.3"
 	},
 	"dependencies": {}
 }

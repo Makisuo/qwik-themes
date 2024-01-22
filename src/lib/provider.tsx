@@ -33,7 +33,7 @@ export const ThemeProvider = component$<ThemeProviderProps>(
 		value,
 		nonce,
 	}) => {
-		const attrs = !value ? themes : Object.values(value)
+		const attrs = !value ? themes.flat() : Object.values(value)
 
 		const applyTheme = $((theme: Theme) => {
 			let resolved = theme
@@ -44,14 +44,20 @@ export const ThemeProvider = component$<ThemeProviderProps>(
 				resolved = getSystemTheme()
 			}
 
-			const name = value ? value[resolved] : resolved
+			// Join the array of attr if the theme is an array
+			const computedResolved = Array.isArray(resolved)
+				? resolved.join(attribute === "class" ? " " : "-")
+				: resolved
+
+			const name = value ? value[computedResolved] : computedResolved
+
 			disableTransitionOnChange ? disableAnimation() : null
 			const d = document.documentElement
 
 			if (attribute === "class") {
 				d.classList.remove(...attrs)
 
-				if (name) d.classList.add(name)
+				if (name) d.classList.add(...name.split(" "))
 			} else {
 				if (name) {
 					d.setAttribute(attribute, name)
@@ -74,13 +80,17 @@ export const ThemeProvider = component$<ThemeProviderProps>(
 				this.theme = theme
 
 				try {
-					localStorage.setItem(storageKey, theme as string)
+					localStorage.setItem(storageKey, Array.isArray(theme) ? theme.join(" ") : (theme as string))
 				} catch (e) {
 					// Unsupported
 				}
 			}),
 			forcedTheme,
-			themes: enableSystem ? [...themes, "system"] : themes,
+			themes: enableSystem
+				? Array.isArray(themes[0])
+					? [...(themes as string[][]), ["system"]]
+					: [...(themes as string[]), "system"]
+				: themes,
 			systemTheme: (enableSystem ? resolvedThemeStore.value : undefined) as "light" | "dark" | undefined,
 		})
 

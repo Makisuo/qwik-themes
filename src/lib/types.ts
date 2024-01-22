@@ -6,11 +6,11 @@ interface ValueObject {
 
 export type SystemTheme = "dark" | "light"
 
-export type Theme = "dark" | "light" | (string & {}) | undefined
+export type Theme = "dark" | "light" | (string & {}) | string[] | undefined
 
 export interface UseThemeProps {
 	/** List of all available theme names */
-	themes: string[]
+	themes: string[] | string[][]
 	/** Forced theme name for the current page */
 	forcedTheme?: string | undefined
 	/** Update the theme */
@@ -26,7 +26,7 @@ export interface UseThemeProps {
 
 export interface ThemeProviderProps {
 	/** List of all available theme names */
-	themes?: string[] | undefined
+	themes?: string[] | string[][] | undefined
 	/** Forced theme name for the current page */
 	forcedTheme?: string | undefined
 	/** Whether to switch between dark and light themes based on prefers-color-scheme */
@@ -40,7 +40,7 @@ export interface ThemeProviderProps {
 	/** Default theme name (for v0.0.12 and lower the default was light). If `enableSystem` is false, the default theme is light */
 	defaultTheme?: string | undefined
 	/** HTML attribute modified based on the active theme. Accepts `class` and `data-*` (meaning any data attribute, `data-mode`, `data-color`, etc.) */
-	attribute?: string | "class" | undefined
+	attribute?: "class" | (string & {}) | undefined
 	/** Mapping of theme name to HTML attribute value. Object where key is the theme name and value is the attribute value */
 	value?: ValueObject | undefined
 	/** Nonce string to pass to the inline script for CSP headers */

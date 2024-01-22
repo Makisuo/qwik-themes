@@ -159,6 +159,33 @@ If your Qwik app uses a class to style the page based on the theme, change the a
 
 Now, setting the theme to "dark" will set `class="dark"` on the `html` element.
 
+### Multi Class Themes
+
+You can also use multi Class Themes like `[dark, skeumorphic]`
+
+
+```tsx
+<ThemeProvider
+    themes={[
+						["simple", "light-yellow"],
+						["simple", "dark-yellow"],
+						["brutalist", "light-yellow"],
+						["brutalist", "dark-yellow"],
+						["hand-drawn", "light"],
+						["hand-drawn", "dark"],
+            ]
+}>
+```
+
+and then you can simply change the theme as before, just with your arrays instead!
+
+```tsx
+	const { setTheme } = useTheme()
+
+  setTheme(["simple", "light-yellow"])
+```
+
+
 ### Force page to a theme
 TODO
 

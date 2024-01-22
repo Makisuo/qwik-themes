@@ -8,9 +8,21 @@ export default () => {
 				<meta charSet="utf-8" />
 				<title>Qwik Blank App</title>
 			</head>
-			<body class="dark">
-				<ThemeProvider>
-					<div>Cool</div>
+			<body>
+				<ThemeProvider
+					themes={[
+						["simple", "light-yellow"],
+						["simple", "dark-yellow"],
+						["brutalist", "light-yellow"],
+						["brutalist", "dark-yellow"],
+						["hand-drawn", "light"],
+						["hand-drawn", "dark"],
+					]}
+					// themes={["dark", "light"]}
+					attribute="class"
+					// defaultTheme="dark"
+				>
+					<div>Nested Theme test</div>
 					<Test />
 				</ThemeProvider>
 			</body>
