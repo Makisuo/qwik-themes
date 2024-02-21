@@ -21,9 +21,9 @@ export const ThemeScript = ({
 			const removeClasses = `c.remove(${attrs.map((t: string) => `'${t}'`).join(",")})`
 
 			return `var d=document.documentElement,c=d.classList;${removeClasses};`
-		} else {
-			return `var d=document.documentElement,n='${attribute}',s='setAttribute';`
 		}
+
+		return `var d=document.documentElement,n='${attribute}',s='setAttribute';`
 	})()
 
 	const fallbackColorScheme = (() => {
@@ -35,9 +35,9 @@ export const ThemeScript = ({
 
 		if (fallback) {
 			return `if(e==='light'||e==='dark'||!e)d.style.colorScheme=e||'${defaultTheme}'`
-		} else {
-			return `if(e==='light'||e==='dark')d.style.colorScheme=e`
 		}
+
+		return `if(e==='light'||e==='dark')d.style.colorScheme=e`
 	})()
 
 	const updateDOM = (name: string, literal = false, setColorScheme = true) => {
@@ -54,7 +54,7 @@ export const ThemeScript = ({
 
 		if (attribute === "class") {
 			if (literal || resolvedName) {
-				text += `c.add(${val})`
+				text += `c.add(...${val}.split(" "))`
 			} else {
 				text += "null"
 			}
@@ -83,13 +83,15 @@ export const ThemeScript = ({
 			}${fallbackColorScheme}}catch(e){}}()`
 		}
 
-		return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
-			value ? `var x=${JSON.stringify(value)};` : ""
-		}${updateDOM(value ? "x[e]" : "e", true)}}else{${updateDOM(
-			defaultTheme,
-			false,
-			false,
-		)};}${fallbackColorScheme}}catch(t){}}();`
+		return `!function(){
+			console.log(localStorage.getItem('${storageKey}'))
+			try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
+				value ? `var x=${JSON.stringify(value)};` : ""
+			}${updateDOM(value ? "x[e]" : "e", true)}}else{${updateDOM(
+				defaultTheme,
+				false,
+				false,
+			)};}${fallbackColorScheme}}catch(t){}}();`
 	})()
 
 	// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>

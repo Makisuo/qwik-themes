@@ -1,6 +1,8 @@
 import { ThemeProvider } from "./lib/provider"
 import { Test } from "./test"
 
+import "./index.css"
+
 export default () => {
 	return (
 		<>
@@ -10,16 +12,10 @@ export default () => {
 			</head>
 			<body>
 				<ThemeProvider
-					themes={[
-						["simple", "light-yellow"],
-						["simple", "dark-yellow"],
-						["brutalist", "light-yellow"],
-						["brutalist", "dark-yellow"],
-						["hand-drawn", "light"],
-						["hand-drawn", "dark"],
-					]}
-					// themes={["dark", "light"]}
+					// themes={["simple", "brutalist", "hand"]}
+					themes={["dark", "light"]}
 					attribute="class"
+					enableSystem={false}
 					// defaultTheme="dark"
 				>
 					<div>Nested Theme test</div>

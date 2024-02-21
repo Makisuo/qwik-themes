@@ -2,8 +2,8 @@ import { component$ } from "@builder.io/qwik"
 import { useTheme } from "./lib/provider"
 
 export const Test = component$(() => {
-	const { theme, setTheme, themes, resolvedTheme } = useTheme()
-	console.log(theme, themes, resolvedTheme)
+	const { theme, setTheme, themes } = useTheme()
+	// console.log(theme, themes, resolvedTheme)
 	return (
 		<div
 			style={{
@@ -18,7 +18,7 @@ export const Test = component$(() => {
 					key={theme.toString()}
 					type="button"
 					onClick$={() => {
-						console.log(theme)
+						// console.log(theme)
 						setTheme(theme)
 					}}
 				>
