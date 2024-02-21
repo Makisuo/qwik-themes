@@ -12,8 +12,8 @@ export default () => {
 			</head>
 			<body>
 				<ThemeProvider
-					// themes={["simple", "brutalist", "hand"]}
-					themes={["dark", "light"]}
+					themes={["simple", "brutalist", "hand"]}
+					// themes={["dark", "light"]}
 					attribute="class"
 					enableSystem={false}
 					// defaultTheme="dark"

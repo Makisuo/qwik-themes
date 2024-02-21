@@ -54,7 +54,7 @@ export const ThemeScript = ({
 
 		if (attribute === "class") {
 			if (literal || resolvedName) {
-				text += `c.add(...${val}.split(" "))]`
+				text += `c.add(${val})]`
 			} else {
 				text += "null"
 			}
@@ -87,7 +87,7 @@ export const ThemeScript = ({
 			console.log(localStorage.getItem('${storageKey}'))
 			try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
 				value ? `var x=${JSON.stringify(value)};` : ""
-			}${updateDOM(value ? "x[e]" : "e", true)}}else{${updateDOM(
+			}${updateDOM(value ? "x[e]" : "...e.split(' ')", true)}}else{${updateDOM(
 				defaultTheme,
 				false,
 				false,
