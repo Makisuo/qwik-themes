@@ -54,7 +54,7 @@ export const ThemeScript = ({
 
 		if (attribute === "class") {
 			if (literal || resolvedName) {
-				text += `c.add(...${val}.split(" "))`
+				text += `c.add(...${val}.split(" "))]`
 			} else {
 				text += "null"
 			}
