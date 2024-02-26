@@ -1,11 +1,19 @@
-.simple {
-    backgroundColor: #dddddd
+.simple.red {
+  background-color: #f00;
 }
 
-.brutalist {
-    backgroundColor: #A2A
+.brutalist.green {
+  background-color: #0f0;
 }
 
-.hand {
-    backgroundColor: #E04
+.hand.blue {
+  background-color: #00f;
+}
+
+.dark {
+  background-color: #000;
+}
+
+.purple {
+  background-color: #f0f;
 }
