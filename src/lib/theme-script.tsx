@@ -84,7 +84,6 @@ export const ThemeScript = ({
     }
 
     return `!function(){
-			console.log(localStorage.getItem('${storageKey}'))
 			try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
 				value ? `var x=${JSON.stringify(value)};` : ""
 			}${updateDOM(value ? "x[e]" : "e", true)}}else{${updateDOM(
