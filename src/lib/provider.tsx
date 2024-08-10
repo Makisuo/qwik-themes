@@ -1,168 +1,175 @@
 import {
-	$,
-	Fragment,
-	Slot,
-	component$,
-	createContextId,
-	useContext,
-	useContextProvider,
-	useStore,
-	useTask$,
-	useVisibleTask$,
-} from "@builder.io/qwik"
-import { disableAnimation, getSystemTheme, getTheme } from "./helper"
-import { ThemeScript } from "./theme-script"
-import type { Theme, ThemeProviderProps, UseThemeProps } from "./types"
+  $,
+  Fragment,
+  Slot,
+  component$,
+  createContextId,
+  useContext,
+  useContextProvider,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
+import { disableAnimation, getSystemTheme, getTheme } from "./helper";
+import { ThemeScript } from "./theme-script";
+import type { Theme, ThemeProviderProps, UseThemeProps } from "./types";
 
-const ThemeContext = createContextId<UseThemeProps>("theme-context")
+const ThemeContext = createContextId<UseThemeProps>("theme-context");
 
-export const useTheme = () => useContext(ThemeContext)
+export const useTheme = () => useContext(ThemeContext);
 
-const defaultThemes = ["light", "dark"]
+const defaultThemes = ["light", "dark"];
 
 export const ThemeProvider = component$<ThemeProviderProps>(
-	({
-		forcedTheme,
-		disableTransitionOnChange = false,
-		enableSystem = true,
-		enableColorScheme = true,
-		storageKey = "theme",
-		themes = defaultThemes,
-		defaultTheme = enableSystem ? "system" : "light",
-		attribute = "data-theme",
-		value,
-		nonce,
-	}) => {
-		const attrs = !value ? themes.flat() : Object.values(value)
+  ({
+    forcedTheme,
+    disableTransitionOnChange = false,
+    enableSystem = true,
+    enableColorScheme = true,
+    storageKey = "theme",
+    themes = defaultThemes,
+    defaultTheme = enableSystem ? "system" : "light",
+    attribute = "data-theme",
+    value,
+    nonce,
+  }) => {
+    const themeSig = useSignal<string | undefined | string[]>("");
 
-		const applyTheme = $((theme: Theme) => {
-			let resolved = theme
-			if (!resolved) return
+    const attrs = !value ? themes.flat() : Object.values(value);
 
-			// If theme is system, resolve it before setting theme
-			if (theme === "system" && enableSystem) {
-				resolved = getSystemTheme()
-			}
+    const applyTheme = $((theme: Theme) => {
+      let resolved = theme;
+      if (!resolved) return;
 
-			// Join the array of attr if the theme is an array
-			const computedResolved = Array.isArray(resolved)
-				? resolved.join(attribute === "class" ? " " : "-")
-				: resolved
+      // If theme is system, resolve it before setting theme
+      if (theme === "system" && enableSystem) {
+        resolved = getSystemTheme();
+      }
 
-			const name = value ? value[computedResolved] : computedResolved
+      // Join the array of attr if the theme is an array
+      const computedResolved = Array.isArray(resolved)
+        ? resolved.join(attribute === "class" ? " " : "-")
+        : resolved;
 
-			disableTransitionOnChange ? disableAnimation() : null
-			const d = document.documentElement
+      const name = value ? value[computedResolved] : computedResolved;
 
-			if (attribute === "class") {
-				d.classList.remove(...attrs)
+      disableTransitionOnChange ? disableAnimation() : null;
+      const d = document.documentElement;
 
-				if (name) d.classList.add(...name.split(" "))
-			} else {
-				if (name) {
-					d.setAttribute(attribute, name)
-				} else {
-					d.removeAttribute(attribute)
-				}
-			}
-		})
+      if (attribute === "class") {
+        d.classList.remove(...attrs);
 
-		const resolvedThemeStore = useStore({
-			value: getTheme(storageKey),
-			setResolvedTheme: $(function (this: any, theme: string) {
-				this.value = theme
-			}),
-		})
+        if (name) d.classList.add(...name.split(" "));
+      } else {
+        if (name) {
+          d.setAttribute(attribute, name);
+        } else {
+          d.removeAttribute(attribute);
+        }
+      }
+    });
 
-		const themeStore = useStore<UseThemeProps>({
-			theme: getTheme(storageKey, defaultTheme),
-			setTheme: $(function (this: UseThemeProps, theme) {
-				this.theme = theme
+    const resolvedThemeStore = useStore({
+      value: getTheme(storageKey),
+      setResolvedTheme: $(function (this: any, theme: string) {
+        this.value = theme;
+      }),
+    });
 
-				try {
-					localStorage.setItem(storageKey, Array.isArray(theme) ? theme.join(" ") : (theme as string))
-				} catch (e) {
-					// Unsupported
-				}
-			}),
-			forcedTheme,
-			themes: enableSystem
-				? Array.isArray(themes[0])
-					? [...(themes as string[][]), ["system"]]
-					: [...(themes as string[]), "system"]
-				: themes,
-			systemTheme: (enableSystem ? resolvedThemeStore.value : undefined) as "light" | "dark" | undefined,
-		})
+    const themeStore = useStore<UseThemeProps>({
+      setTheme: $(function (this: UseThemeProps, theme) {
+        themeSig.value = theme;
 
-		useVisibleTask$(({ cleanup }) => {
-			themeStore.setTheme(getTheme(storageKey, defaultTheme))
+        try {
+          localStorage.setItem(
+            storageKey,
+            Array.isArray(theme) ? theme.join(" ") : (theme as string)
+          );
+        } catch (e) {
+          // Unsupported
+        }
+      }),
+      forcedTheme,
+      themes: enableSystem
+        ? Array.isArray(themes[0])
+          ? [...(themes as string[][]), ["system"]]
+          : [...(themes as string[]), "system"]
+        : themes,
+      systemTheme: (enableSystem ? resolvedThemeStore.value : undefined) as
+        | "light"
+        | "dark"
+        | undefined,
+    });
 
-			const media = window.matchMedia("(prefers-color-scheme: dark)")
+    useVisibleTask$(({ cleanup }) => {
+      themeStore.setTheme(themeSig.value);
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
 
-			const handleMediaQuery = (e: MediaQueryListEvent | MediaQueryList) => {
-				const resolved = getSystemTheme(e)
-				resolvedThemeStore.setResolvedTheme(resolved)
+      const handleMediaQuery = (e: MediaQueryListEvent | MediaQueryList) => {
+        const resolved = getSystemTheme(e);
+        resolvedThemeStore.setResolvedTheme(resolved);
 
-				if (themeStore.theme === "system" && enableSystem && !forcedTheme) {
-					applyTheme("system")
-				}
-			}
+        if (themeSig.value === "system" && enableSystem && !forcedTheme) {
+          applyTheme("system");
+        }
+      };
 
-			media.addEventListener("change", handleMediaQuery)
+      media.addEventListener("change", handleMediaQuery);
 
-			handleMediaQuery(media)
+      handleMediaQuery(media);
 
-			cleanup(() => media.removeEventListener("change", handleMediaQuery))
-		})
+      cleanup(() => media.removeEventListener("change", handleMediaQuery));
+    });
 
-		// localStorage event handling
-		useVisibleTask$(({ cleanup }) => {
-			const handleStorage = (e: StorageEvent) => {
-				if (e.key !== storageKey) {
-					return
-				}
+    // localStorage event handling
+    useVisibleTask$(({ cleanup }) => {
+      const handleStorage = (e: StorageEvent) => {
+        if (e.key !== storageKey) {
+          return;
+        }
 
-				// If default theme set, use it if localstorage === null (happens on local storage manual deletion)
-				const theme = e.newValue || defaultTheme
-				themeStore.setTheme(theme)
-			}
+        // If default theme set, use it if localstorage === null (happens on local storage manual deletion)
+        const theme = e.newValue || defaultTheme;
+        themeStore.setTheme(theme);
+      };
 
-			window.addEventListener("storage", handleStorage)
-			cleanup(() => window.removeEventListener("storage", handleStorage))
-		})
+      window.addEventListener("storage", handleStorage);
+      cleanup(() => window.removeEventListener("storage", handleStorage));
+    });
 
-		// Whenever theme or forcedTheme changes, apply it
-		useTask$(({ track }) => {
-			track(() => themeStore.theme || forcedTheme)
+    // Whenever theme or forcedTheme changes, apply it
+    useTask$(({ track }) => {
+      track(() => themeSig.value || forcedTheme);
 
-			if (themeStore.theme !== "system") {
-				resolvedThemeStore.setResolvedTheme(themeStore.theme as string)
-			}
+      if (themeSig.value !== "system") {
+        resolvedThemeStore.setResolvedTheme(themeSig.value as string);
+      }
 
-			applyTheme(forcedTheme ?? themeStore.theme)
-		})
+      applyTheme(forcedTheme ?? themeSig.value);
+    });
 
-		useContextProvider(ThemeContext, themeStore)
+    useContextProvider(ThemeContext, themeStore);
 
-		return (
-			<Fragment>
-				<ThemeScript
-					{...{
-						forcedTheme,
-						disableTransitionOnChange,
-						enableSystem,
-						enableColorScheme,
-						storageKey,
-						themes,
-						defaultTheme,
-						attribute,
-						value,
-						attrs,
-						nonce,
-					}}
-				/>
-				<Slot />
-			</Fragment>
-		)
-	},
-)
+    return (
+      <Fragment>
+        <ThemeScript
+          {...{
+            forcedTheme,
+            disableTransitionOnChange,
+            enableSystem,
+            enableColorScheme,
+            storageKey,
+            themes,
+            defaultTheme,
+            attribute,
+            value,
+            attrs,
+            nonce,
+          }}
+        />
+        <Slot />
+      </Fragment>
+    );
+  }
+);
