@@ -3,7 +3,7 @@ import type { SystemTheme } from "./types"
 
 export const getTheme = (key: string, fallback?: string) => {
 	if (isServer) return undefined
-	let theme
+	let theme: any
 	try {
 		theme = localStorage.getItem(key) || undefined
 	} catch (e) {
