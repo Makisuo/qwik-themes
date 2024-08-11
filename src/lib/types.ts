@@ -1,4 +1,4 @@
-import type { QRL, Signal } from "@builder.io/qwik"
+import type { QRL } from "@builder.io/qwik"
 
 interface ValueObject {
 	[themeName: string]: string
